@@ -65,13 +65,50 @@ equal to the step height $h$ of the spiral:
   r(\theta_n)=R, \quad \Delta s=h.
 \end{align}
 Equivalently we may write:
-\begin{align}
-  a \, \theta(n \Delta s)=R+n\Delta s, \quad \Delta s=2\pi a.
+\begin{align} \label{eqn:2d2}
+  a \, \theta(n \Delta s)=R, \quad \Delta s=2\pi a.
 \end{align}
 We introduce \eqref{eqn:arclength} into the left equation as we did in
 the construction of \eqref{eqn:f}:
 \begin{align}
-  a \, \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R, 
+  a \, \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R+n\Delta s. 
+\end{align}
+Now we replace $\Delta s$ with the right equation from
+\eqref{eqn:2d2}, and divide by $a$:
+\begin{align}
+  \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R/a +2\pi n. 
+\end{align}
+We reformulate the equation system as:
+\begin{align}
+  f_1(\theta,a)&=\frac{a}{2}\(p\,\theta+\log(p\,\theta)\)-2\pi n-R/a,\\
+  f_2(\theta,a)&=a\,\theta-R. 
+\end{align}
+Its Jacobian is:
+\begin{align}
+  J(\theta,a)=\begin{pmatrix}
+  f_{1,\theta} & f_{1,a} \\
+  f_{2,\theta} & f_{2,a}
+\end{pmatrix}.
+\end{align}
+With the derivatives
+\begin{align}
+  f_{1,\theta}&=a\,p, &f_{1,a}&=\frac{1}{2}\(p\,\theta+\log(p\,\theta)\)+R/\theta^2, \\
+  f_{2,\theta}&=a, &f_{2,a}&=\theta.
+\end{align}
+The inverse of the Jacobian is:
+\begin{align}
+J^{-1}(\theta,a)=\frac{\begin{pmatrix}
+    \theta & -(p\theta+\log p\theta)/2-R/\theta^2 \\
+    -a & ap\\
+\end{pmatrix}}
+{ap\,\theta-a\(\(p\theta+\log p\theta\)/2+R/\theta^2\)}
+\end{align}
+The iteration step for the Newton method is:
+\begin{align}
+  \begin{pmatrix}\theta_{n+1}\\a_{n+1}\end{pmatrix}=
+  \begin{pmatrix}\theta_n\\a_n\end{pmatrix}
+  -J^{-1}(\theta_n,a_n)
+  \begin{pmatrix}f_1(\theta_n,a_n)\\f_2(\theta_n,a_n)\end{pmatrix}.
 \end{align}
 \begin{figure}[h]
   \begin{center}

@@ -92,3 +92,9 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
     img))
 
 (write-pgm "/dev/shm/o.pgm" (draw-spiral))
+
+
+;; solve 2d non-linear equations f(x,y)=0 g(x,y)=0 by newton method
+;; jacobian J=((fx fy)(gx gy))
+;; matrix inverse ((a b)(c d))^-1 = ((d -b)(-c a))/(ad-bc)
+;; step P1=P0-J(P0)^-1 F(P0) with F=(f g), P0=(x y)
