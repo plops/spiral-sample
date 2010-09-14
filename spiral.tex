@@ -49,24 +49,40 @@ This inversion can be done efficiently with Newton interation
 Here we introduce the function $f(\theta)$ that vanishes at a given arc
 length $s$ and its derivative $f'(\theta)$:
 \begin{align}
-  f(\theta)&=\frac{a}{2}\(p\,\theta+\log(p\,\theta)-s\),\\
+  \label{eqn:f}
+  f(\theta)&=\frac{a}{2}\(p\,\theta+\log(p\,\theta)\)-s,\\
   f'(\theta)&=\frac{\partial f(x)}{\partial x}=a p.
 \end{align}
 \section{Filling the back focal plane}
 Given the number $n$ of sampling points and the desired radius of the
 back focal plane $R$ the parameter $a$ and the value of $\theta_n$ can
-be determined by solving the following non-linear system of equations:
+be determined by solving the following non-linear system of
+equations. The first equation states that the spiral intersects the
+circle with radius $R$ at the discrete angle $\theta_n$. The second
+equation defines the sample length $\Delta s$ along the arc to be
+equal to the step height $h$ of the spiral:
 \begin{align}
-  r(\theta_n)=R, \quad \Delta s=2\pi a.
+  r(\theta_n)=R, \quad \Delta s=h.
 \end{align}
-\begin{figure}
+Equivalently we may write:
+\begin{align}
+  a \, \theta(n \Delta s)=R+n\Delta s, \quad \Delta s=2\pi a.
+\end{align}
+We introduce \eqref{eqn:arclength} into the left equation as we did in
+the construction of \eqref{eqn:f}:
+\begin{align}
+  a \, \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R, 
+\end{align}
+\begin{figure}[h]
   \begin{center}
     \includegraphics[width=.3\columnwidth]{200}
     \includegraphics[width=.3\columnwidth]{1000}
     \includegraphics[width=.3\columnwidth]{2000}
   \end{center}
-  \caption{Equidistant sampling of a circle of the same diameter with
-    200 (left), 1000 (middle) and 2000 (right) points.}
+  \caption{Equidistant sampling of a circle of the same diameter
+    $R=100$ with 200 (left), 1000 (middle) and 2000 (right)
+    points. The respective values for the parameter $a$ are $1.97795$,
+    $0.883446$ and $0.624576$. }
 \end{figure}
 \end{document}
 %% FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
@@ -83,8 +99,11 @@ be determined by solving the following non-linear system of equations:
 %% doi={10.1109/TMI.1986.4307732},
 %% ISSN={0278-0062},}
 
-
-%% Weisstein, Eric W. "Fibonacci Numbers." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/FibonacciNumber.html
+%% Weisstein, Eric W. "Archimedes' Spiral." From MathWorld--A Wolfram
+%% Web Resource. http://mathworld.wolfram.com/ArchimedesSpiral.html
 
 
 %% http://en.wikipedia.org/wiki/Newton's_method
+
+%% multidimensional newton method
+%% http://math.fullerton.edu/mathews/n2003/NewtonSystemMod.html
