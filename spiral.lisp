@@ -66,14 +66,20 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
     (incf x (- (f-over-df s a x))))
   x)
 
-(defun draw-spiral (&key (h 256) (w 256) (a 1.0) (ds #.(coerce (* 2.0 pi) 'single-float))
-		    (points 1000) (phi-max 12.0))
+;; FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
+;; points=200 bfp-radius=100 -> a=1.97795
+;; points=1000 -> a=.883446
+;; points=2000 -> a=.624576
+
+(defun draw-spiral (&key (h 256) (w 256) (points 2000) (bfp-radius 100.0))
   (declare (fixnum h w points)
-	   (single-float ds phi-max a)
+	   (single-float bfp-radius)
 	   (values (simple-array (unsigned-byte 8) 2) &optional))
   (let* ((img (make-array (list h w) :element-type '(unsigned-byte 8)))
 	 (wh (floor w 2))
-	 (hh (floor h 2)))
+	 (hh (floor h 2))
+	 (a .624576)
+	 (ds (* a 2.0 (coerce pi 'single-float))))
     (with-arrays (img)
       (dotimes (p points)
 	(let* ((phi (find-zero (* p ds) a))
@@ -85,5 +91,4 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	  (setf (img j i) 255))))
     img))
 
-(write-pgm "/dev/shm/o.pgm" (draw-spiral :a 1.0
-					 :points 524 :phi-max 12.0))
+(write-pgm "/dev/shm/o.pgm" (draw-spiral))
