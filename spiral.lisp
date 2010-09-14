@@ -66,38 +66,13 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
     (incf x (- (f-over-df s a x))))
   x)
 
-;; FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
-;; points=200 bfp-radius=100 -> a=1.97795
-;; points=1000 -> a=.883446
-;; points=2000 -> a=.624576
-
-(defun draw-spiral (&key (h 256) (w 256) (points 2000) (bfp-radius 100.0))
-  (declare (fixnum h w points)
-	   (single-float bfp-radius)
-	   (values (simple-array (unsigned-byte 8) 2) &optional))
-  (let* ((img (make-array (list h w) :element-type '(unsigned-byte 8)))
-	 (wh (floor w 2))
-	 (hh (floor h 2))
-	 (a .624576)
-	 (ds (* a 2.0 (coerce pi 'single-float))))
-    (with-arrays (img)
-      (dotimes (p points)
-	(let* ((phi (find-zero (* p ds) a))
-	       (z (* a phi (exp (complex 0.0 phi))))
-	       (x (realpart z))
-	       (y (imagpart z))
-	       (i (floor (+ x wh)))
-	       (j (floor (+ y hh))))
-	  (setf (img j i) 255))))
-    img))
-
-(write-pgm "/dev/shm/o.pgm" (draw-spiral))
-
 
 ;; solve 2d non-linear equations f(x,y)=0 g(x,y)=0 by newton method
 ;; jacobian J=((fx fy)(gx gy))
 ;; matrix inverse ((a b)(c d))^-1 = ((d -b)(-c a))/(ad-bc)
 ;; step P1=P0-J(P0)^-1 F(P0) with F=(f g), P0=(x y)
+;; FindRoot[{a x == 100, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == 200 * 2 pi + 100/a}, {{x, 1}, {a, 1}}]
+;; example n=200, bfp-radius=100 -> theta=25.3654, a=3.94238
 
 (defun find-zero2 (&key (n 200) (bfp-radius 100.0))
   (declare (fixnum n)
@@ -105,7 +80,7 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	   (values single-float single-float &optional))
   (let* ((a 1.0)
 	 (theta 1.0))
-    (dotimes (i 10)
+    (dotimes (i 14)
       (let* ((theta^2 (* theta theta))
 	     (p (sqrt (1+ theta^2)))
 	     (q (* theta p))
@@ -116,7 +91,39 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	     (ap (* a p))
 	     (1/det (/ (- (* ap theta) (* s a)))))
 	(incf theta (* 1/det (- (* s f2) (* theta f1))))
-	(incf a (* 1/det (- (* a f1) (* ap f2))))))
-    (values theta a)))
+	(incf a (* 1/det (- (* a f1) (* ap f2))))
+	(format t "~a~%" (list a theta))))
+    (values a theta)))
 
+#+nil
 (find-zero2)
+
+(defun clamp (x)
+  (declare (fixnum x)
+	   (values (unsigned-byte 8) &optional))
+  (cond ((< x 0) 0)
+	((< 255 x) 255)
+	(t x)))
+
+(defun draw-spiral (&key (h 256) (w 256) (points 100) (bfp-radius 100.0))
+  (declare (fixnum h w points)
+	   (single-float bfp-radius)
+	   (values (simple-array (unsigned-byte 8) 2) &optional))
+  (let* ((img (make-array (list h w) :element-type '(unsigned-byte 8)))
+	 (wh (floor w 2))
+	 (hh (floor h 2))
+	 (a (find-zero2 :n points :bfp-radius bfp-radius))
+	 (ds (* a 2.0 (coerce pi 'single-float))))
+    (with-arrays (img)
+      (dotimes (p points)
+	(let* ((phi (find-zero (* p ds) a))
+	       (z (* a phi (exp (complex 0.0 phi))))
+	       (x (realpart z))
+	       (y (imagpart z))
+	       (i (clamp (floor (+ x wh))))
+	       (j (clamp (floor (+ y hh)))))
+	  (setf (img j i) 255))))
+    img))
+
+(write-pgm "/dev/shm/o.pgm" (draw-spiral :points 600 :bfp-radius 80.0))
+
