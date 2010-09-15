@@ -52,20 +52,21 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 ;; f(x) = a/2 (p x + ln(p x)) - s
 ;; f'(x) = a p
 ;; newton iteration to invert: x_{n+1}=x_n-f(x_n)/f'(x_n)
-(defun f-over-df (s a x)
-  (declare (single-float s a x)
-	   (values single-float &optional))
-  (let ((p (sqrt (1+ (* x x)))))
-    (- (* .5 (+ x (/ (log (* p x)) p)))
-       (/ s (* a p)))))
 
 (defun find-zero (s a &optional (x 1.0))
   (declare (single-float s a x)
 	   (values single-float &optional))
   (dotimes (i 12)
-    (incf x (- (f-over-df s a x))))
+    (let* ((x2 (* x x))
+	   (p (sqrt (1+ x2)))
+	   (pt (* p x))
+	   (a/2 (* .5 a))
+	   (f (- (* a/2 (+ pt (log pt))) s))
+	   (df (* a/2 (/ (* (1+ (* 2 x2)) (1+ pt)) (* x p p)))))
+      (incf x (- (/ f df)))))
   x)
 
+(find-zero 12.0 1.0 1.0)
 
 ;; solve 2d non-linear equations f(x,y)=0 g(x,y)=0 by newton method
 ;; jacobian J=((fx fy)(gx gy))
@@ -124,6 +125,6 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	       (j (clamp (floor (+ y hh)))))
 	  (setf (img j i) 255))))
     img))
-
+#+nil
 (write-pgm "/dev/shm/o.pgm" (draw-spiral :points 600 :bfp-radius 80.0))
 
