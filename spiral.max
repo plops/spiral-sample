@@ -1,0 +1,9 @@
+p:sqrt(1+t^2);                                                           
+f:a/2*(p*t+log(p*t))-s;                                                  
+df:factor(ratexpand (diff(f,t)));                                        
+                                                                         
+f1:a/2*(p*t+log(p*t))-2*%pi*n-R/a;                                       
+f2:a*t-R;                                                                
+                                                                         
+d1t:factor(ratexpand (diff(f1,t)));                                      
+d1a:factor(ratexpand (diff(f1,a)));         
