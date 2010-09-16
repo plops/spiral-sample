@@ -82,8 +82,8 @@ Actually we know $a\not =0$ so we can transform the function to
 simplify its derivative:
 \begin{align} \label{eqn:g1}
 \begin{split}
-  g_1(a)&=\underbrace{\sqrt{1+\frac{R^2}{a^2}}}_{p_1}\frac{R}{a}+
-  \log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)\\ &-4\pi (n-1),\end{split}\\
+  g_1(a)&=\underbrace{\sqrt{1+\frac{R^2}{a^2}}}_{p_1}\frac{R}{a}\\ 
+  &+\log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)-4\pi (n-1),\end{split}\\
   g_1'(a)&=-\frac{R^3}{p_1}\frac{1}{a^4}-\frac{R^2}{p_1^2}\frac{1}{a^3}-R
     p_1\frac{1}{a^2}-\frac{1}{a}.
 \end{align}
@@ -100,7 +100,7 @@ $\Delta s$ can be obtained and the circle drawn.
     \includegraphics[width=.3\columnwidth]{o0400}
     \includegraphics[width=.3\columnwidth]{o1024}
   \end{center}
-  \caption{Equidistant sampling of a circle of the same diameter
+  \caption{Equidistant sampling of a circle of the same radius
     $R=128$ with different number of points (from top left to bottom
     right: 30, 100, 200, 300, 400, 1024).}
 \end{figure}
@@ -123,9 +123,27 @@ Thus we can define the equivalent to \eqref{eqn:g1}:
   \begin{split}
   g_2'(a)&=
   -\frac{R^3}{p_2}\frac{1}{a^4}
-  -\(\frac{\pi\alpha R^2}{p_2}+\frac{R^3}{p_2^2}\)\frac{1}{a^3}\\
+  -\(\frac{\pi\alpha R^2}{p_2}+\frac{R^2}{p_2^2}\)\frac{1}{a^3}\\
   &-\(R p_2+\frac{\pi\alpha R}{p_2^2}\)\frac{1}{a^2}-\(\pi\alpha p_2+1\)\frac{1}{a}+\frac{\pi\alpha}{R}.\end{split}
 \end{align}
+
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=.3\columnwidth]{q0030}
+    \includegraphics[width=.3\columnwidth]{q0100}
+    \includegraphics[width=.3\columnwidth]{q0200}
+    \includegraphics[width=.3\columnwidth]{q0300}
+    \includegraphics[width=.3\columnwidth]{q0400}
+    \includegraphics[width=.3\columnwidth]{q1024}
+  \end{center}
+  \caption{A back focal plane of radius 100 is filled with equidistant
+    spiral sampling, ensuring that the outermost disk is contained
+    inside. The number of disks are (from top left to bottom right):
+    30, 100, 200, 300, 400, 1024.}
+\end{figure}
+
+
 \end{document}
 %% FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
 
