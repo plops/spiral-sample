@@ -1,5 +1,5 @@
 \documentclass[twocolumn,DIV18]{scrartcl}
-\usepackage{refcheck}
+%\usepackage{refcheck}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \newcommand{\abs}[1]{\lvert #1 \rvert}
@@ -71,8 +71,8 @@ s(\theta_n)/(n-1)$.
 
 Note that we are only interested in solutions with $\Delta s=h$. We
 want the sampling step to be equal to the step height $h=2\pi a$ of
-the spiral. We therefor need to find the zero of the function:
-\begin{align}
+the spiral. We therefore need to find the zero of the function:
+\begin{align} \label{eqn:g}
   g(a)&=\frac{s(\theta_n)}{n-1}-2\pi a\\
   &=\frac{a}{2}\frac{p\theta_n+\log p\theta_n}{n-1}-2\pi a\\
   &=\frac{a}{2}\frac{\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}+
@@ -86,16 +86,29 @@ simplify its derivative:
   g_1'(a)&=-\frac{R^3}{p_1}\frac{1}{a^4}-\frac{R^2}{p_1^2}\frac{1}{a^3}-R
     p_1\frac{1}{a^2}-\frac{1}{a}.
 \end{align}
+The Newton method can be used to find the zero $a_0$ of $g(a)$. Then
+$\Delta s$ can be obtained and the circle drawn.
+
+% for i in *.pgm ; do potrace $i ;done
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[width=.3\columnwidth]{200}
-    \includegraphics[width=.3\columnwidth]{1000}
-    \includegraphics[width=.3\columnwidth]{2000}
+    \includegraphics[width=.3\columnwidth]{o0030}
+    \includegraphics[width=.3\columnwidth]{o0100}
+    \includegraphics[width=.3\columnwidth]{o0200}
+    \includegraphics[width=.3\columnwidth]{o0300}
+    \includegraphics[width=.3\columnwidth]{o0400}
+    \includegraphics[width=.3\columnwidth]{o1024}
   \end{center}
   \caption{Equidistant sampling of a circle of the same diameter
-    $R=100$ with 200 (left), 1000 (middle) and 2000 (right)
-    points.}
+    $R=128$ with different number of points (from top left to bottom
+    right: 30, 100, 200, 300, 400, 1024).}
 \end{figure}
+
+\section{Outlook}
+It would be useful to modify the filling formula \eqref{eqn:g} such,
+that disks with radius $\Delta s/2$ on the sample points don't overlap
+the periphery of the big circle.
+
 \end{document}
 %% FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
 
