@@ -1,9 +1,31 @@
-p:sqrt(1+t^2);                                                           
-f:a/2*(p*t+log(p*t))-s;                                                  
+p:sqrt(1+t^2);
+q:p*t;
+r:q+log(q);
+f:a*r/2-s;                                                  
 df:factor(ratexpand (diff(f,t)));                                        
-                                                                         
-f1:a/2*(p*t+log(p*t))-2*%pi*n-R/a;                                       
+
+plot2d(ev([f,df],a:1,s:40),[t,0,10],[psfile,"/dev/shm/o.eps"]);
+find_root(ev(f,a:1,s:40),t,.1,100);
+ev(a*r/2,a:1,s:40,t:8.67);
+
+f1:a*r/2-2*%pi*n-R/a;                                       
 f2:a*t-R;                                                                
                                                                          
 d1t:factor(ratexpand (diff(f1,t)));                                      
-d1a:factor(ratexpand (diff(f1,a)));         
+d1a:factor(ratexpand (diff(f1,a)));
+
+d2t:diff(f2,t);                                      
+d2a:diff(f2,a);
+
+plot2d(ev([f1,d1t],R:7,n:10,a:1),[t,0,100],[psfile, "/dev/shm/o.eps"]);
+
+plot3d(ev(abs(f1)^.6,R:a*t,n:10),[t,.1,10],[a,.1,10],[psfile, "/dev/shm/o.eps"]);
+plot3d(ev(f2,R:7,n:10),[t,.1,10],[a,.1,10],[psfile, "/dev/shm/o.eps"]);
+
+ev(2*%pi*n+R/a,R:7,n:10,a:1),numer;
+
+invert(matrix([a,b],[c,d]));
+m:matrix([d1t,d1a],[d2t,d2a]);
+adjoint(m);
+factor(ratexpand(determinant(m)));
+invert(m);

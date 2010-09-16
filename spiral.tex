@@ -1,4 +1,5 @@
 \documentclass[twocolumn,DIV18]{scrartcl}
+\usepackage{refcheck}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \newcommand{\abs}[1]{\lvert #1 \rvert}
@@ -18,7 +19,7 @@ to mind.
 \section{Archimedes Spiral}
 An Archimedes spiral in polar coordinates $(r,\theta)$ is defined like
 this:
-\begin{align}
+\begin{align} \label{eqn:def}
   r(\theta)=a\,\theta.
 \end{align}
 The step height $h$ of the spiral is given by
@@ -52,12 +53,29 @@ length $s$ and its derivative $f'(\theta)$:
   \label{eqn:f}
   f(\theta)&=\frac{a}{2}\(p\,\theta+\log(p\,\theta)\)-s,\\
   f'(\theta)&=\frac{\partial f(\theta)}{\partial \theta}=
-  \frac{a}{2}\frac{(2\theta^2+1)(\theta p + 1)}{\theta p^2}.
+  \frac{a}{2}\frac{(1+2\theta^2)(1+p\theta)}{p^2 \theta}.
 \end{align}
 \section{Filling the back focal plane}
-Given the number $n$ of sampling points and the desired radius of the
-back focal plane $R$ the parameter $a$ and the value of $\theta_n$ can
-be determined by solving the following non-linear system of
+We want to find the coordinates of equaly distributed sampling points
+along the arc length inside of a circle with radius R. We put the
+first sampling point $\theta_0=0$ in the center and the last point
+$\theta_n$ on the periphery of the circle. By definition
+\eqref{eqn:def} of the spiral we know
+\begin{align}
+  \theta_n=R/a.
+\end{align}
+Now we obtain the arc length $s(\theta_n)$ of the spiral contained
+inside the circle via \eqref{eqn:arclength}. Dividing by the number of
+sub-intervals gives the apropriate sampling step $\Delta s=s/(n-1)$.
+
+Note that we are only interested in solutions with $\Delta s=h$. We
+want the sampling step to be equal to the step height of the spiral.
+
+
+  $\theta_0=0$ Given the
+number $n$ of sampling points and the desired radius of the back focal
+plane $R$ the parameter $a$ and the value of $\theta_n$ can be
+determined by solving the following non-linear system of
 equations. The first equation states that the spiral intersects the
 circle with radius $R$ at the discrete angle $\theta_n$. The second
 equation defines the sample length $\Delta s$ along the arc to be
@@ -81,7 +99,9 @@ Now we replace $\Delta s$ with the right equation from
 \end{align}
 We reformulate the equation system as:
 \begin{align}
-  f_1(\theta,a)&=\frac{a}{2}\(p\,\theta+\log(p\,\theta)\)-2\pi n-R/a,\\
+  f_1(\theta,a)&=\frac{a}{2}
+  \(p\,\theta+\log(p\,\theta)\)
+  -2\pi n-R/a,\\
   f_2(\theta,a)&=a\,\theta-R. 
 \end{align}
 Its Jacobian is:
@@ -93,18 +113,19 @@ Its Jacobian is:
 \end{align}
 With the derivatives
 \begin{align}
-  f_{1,\theta}&=\frac{a}{2}\frac{(2\theta^2+1)(\theta p + 1)}{\theta p^2},\\ 
-  f_{1,a}&=\frac{R}{a^2}\frac{1}{2}\(p\theta+\log(p\theta)\), \\
+  f_{1,\theta}&=\frac{a}{2}\frac{(1+2\theta^2)(1+\overbrace{p \theta}^q)}
+  {p^2 \theta},\\ 
+  f_{1,a}&=\frac{R}{a^2}+\frac{1}{2}(\underbrace{p\theta+\log(p\theta)}_r), \\
   f_{2,\theta}&=a, \\
   f_{2,a}&=\theta.
 \end{align}
 The inverse of the Jacobian is:
 \begin{align}
 J^{-1}(\theta,a)=\frac{\begin{pmatrix}
-    \theta & -(p\theta+\log p\theta)/2-R/\theta^2 \\
-    -a & ap\\
+    \theta & -f_{1,a} \\
+    -a & f_{1,\theta}\\
 \end{pmatrix}}
-{ap\,\theta-a\(\(p\theta+\log p\theta\)/2+R/\theta^2\)}
+{\theta f_{1,\theta}-a f_{1,a}}
 \end{align}
 The iteration step for the Newton method is:
 \begin{align}
