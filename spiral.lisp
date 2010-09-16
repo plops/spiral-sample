@@ -106,15 +106,16 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 #+nil
 (find-zero2 :n 10 :bfp-radius 7.0)
 
-(defun find-zero-g (&key (n 10) (r 100.0) (a .01) (itmax 100))
+(defun find-zero-g (&key (n 10) (r 100.0))
   (declare (fixnum n)
-	   (single-float r a)
+	   (single-float r)
 	   (values single-float &optional))
-  (let* ((r2 (* r r))
+  (let* ((a 1.0)
+	 (r2 (* r r))
 	 (r3 (* r2 r))
 	 (4pi #.(coerce (* 4 pi) 'single-float)))
     (declare ((single-float 0.0) a))
-    (dotimes (i itmax)
+    (dotimes (i 12)
       (let* ((theta (/ r a))
 	     (theta^2 (* theta theta))
 	     (p (sqrt (1+ theta^2)))
@@ -129,20 +130,14 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 		      (* 1/a3 (/ r2 p2))
 		      (* 1/a2 (* p r))
 		      1/a)))
-	(format t "~f ~f~%~f ~f~%"
-		a 0.0
-		a g1)
 	(incf a (/ g1 -dg1))))
     a))
 
 #+nil
-(- (find-zero-g :n 10 :r 100.0 :itmax 1000 :a 10.0) 9.626402396855893)
+(- (find-zero-g :n 10 :r 100.0) 9.626402396855893)
 
 #+nil
-(with-open-file (*standard-output* "/dev/shm/o.dat" :if-does-not-exist :create
-				   :if-exists :supersede
-				   :direction :output)
- (find-zero-g :n 10 :r 100.0 :a 6.0 :itmax 50))
+(find-zero-g :n 1000 :r 100.0)
 
 (defun clamp (x)
   (declare (fixnum x)
@@ -151,17 +146,19 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	((< 255 x) 255)
 	(t x)))
 
-(defun draw-spiral (&key (h 256) (w 256) (points 100) (bfp-radius 100.0))
-  (declare (fixnum h w points)
+(defun draw-spiral (&key (h 256) (w 256) (n 100) (bfp-radius 100.0))
+  (declare (fixnum h w n)
 	   (single-float bfp-radius)
 	   (values (simple-array (unsigned-byte 8) 2) &optional))
   (let* ((img (make-array (list h w) :element-type '(unsigned-byte 8)))
 	 (wh (floor w 2))
 	 (hh (floor h 2))
-	 (a (find-zero2 :n points :bfp-radius bfp-radius))
-	 (ds (* a 2.0 (coerce pi 'single-float))))
+	 (a (find-zero-g :n n :r bfp-radius))
+	 (theta_n (/ bfp-radius a))
+	 (s (arc-length a theta_n))
+	 (ds (/ s (- n 1))))
     (with-arrays (img)
-      (dotimes (p points)
+      (dotimes (p n)
 	(let* ((phi (find-zero (* p ds) a))
 	       (z (* a phi (exp (complex 0.0 phi))))
 	       (x (realpart z))
@@ -171,5 +168,7 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 	  (setf (img j i) 255))))
     img))
 #+nil
-(write-pgm "/dev/shm/o.pgm" (draw-spiral :points 600 :bfp-radius 80.0))
+(loop for i in '(30 100 200 300 400 1024) do
+ (write-pgm (format nil "/dev/shm/o~4,'0d.pgm" i)
+	    (draw-spiral :n i :bfp-radius 80.0)))
 
