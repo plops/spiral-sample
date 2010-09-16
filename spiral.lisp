@@ -106,6 +106,44 @@ so that (ARRAY ...) corresponds to (AREF ARRAY ...)."
 #+nil
 (find-zero2 :n 10 :bfp-radius 7.0)
 
+(defun find-zero-g (&key (n 10) (r 100.0) (a .01) (itmax 100))
+  (declare (fixnum n)
+	   (single-float r a)
+	   (values single-float &optional))
+  (let* ((r2 (* r r))
+	 (r3 (* r2 r))
+	 (4pi #.(coerce (* 4 pi) 'single-float)))
+    (declare ((single-float 0.0) a))
+    (dotimes (i itmax)
+      (let* ((theta (/ r a))
+	     (theta^2 (* theta theta))
+	     (p (sqrt (1+ theta^2)))
+	     (q (* p theta))
+	     (g1 (+ (log q) q (* 4pi (- 1.0 n))))
+	     (1/a (/ 1.0 a))
+	     (1/a2 (* 1/a 1/a))
+	     (1/a3 (* 1/a 1/a2))
+	     (1/a4 (* 1/a2 1/a2))
+	     (p2 (* p p))
+	     (-dg1 (+ (* 1/a4 (/ r3 p))
+		      (* 1/a3 (/ r2 p2))
+		      (* 1/a2 (* p r))
+		      1/a)))
+	(format t "~f ~f~%~f ~f~%"
+		a 0.0
+		a g1)
+	(incf a (/ g1 -dg1))))
+    a))
+
+#+nil
+(- (find-zero-g :n 10 :r 100.0 :itmax 1000 :a 10.0) 9.626402396855893)
+
+#+nil
+(with-open-file (*standard-output* "/dev/shm/o.dat" :if-does-not-exist :create
+				   :if-exists :supersede
+				   :direction :output)
+ (find-zero-g :n 10 :r 100.0 :a 6.0 :itmax 50))
+
 (defun clamp (x)
   (declare (fixnum x)
 	   (values (unsigned-byte 8) &optional))

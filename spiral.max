@@ -29,3 +29,17 @@ m:matrix([d1t,d1a],[d2t,d2a]);
 adjoint(m);
 factor(ratexpand(determinant(m)));
 invert(m);
+
+g:ev(r-4*%pi*(n-1),t:R/a);
+
+dg:diff(g,a);
+
+g1(x):=ev(g,a:x,n:10,R:100);
+dg1(x):=ev(dg,a:x,n:10,R:100);
+(g1(10.001)-g1(10))/.001,numer;
+dg1(10),numer;
+
+ratexpand(subst(qq,sqrt(R^2/a^2+1),dg));
+find_root(ev(g,R:100,n:10),a,3,10);
+
+plot2d(ev([g,dg],R:100,n:10),[a,4,20.],[psfile,"/dev/shm/o.eps"]);

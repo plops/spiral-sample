@@ -66,73 +66,25 @@ $\theta_n$ on the periphery of the circle. By definition
 \end{align}
 Now we obtain the arc length $s(\theta_n)$ of the spiral contained
 inside the circle via \eqref{eqn:arclength}. Dividing by the number of
-sub-intervals gives the apropriate sampling step $\Delta s=s/(n-1)$.
+sub-intervals gives the apropriate sampling step $\Delta s =
+s(\theta_n)/(n-1)$.
 
 Note that we are only interested in solutions with $\Delta s=h$. We
-want the sampling step to be equal to the step height of the spiral.
-
-
-  $\theta_0=0$ Given the
-number $n$ of sampling points and the desired radius of the back focal
-plane $R$ the parameter $a$ and the value of $\theta_n$ can be
-determined by solving the following non-linear system of
-equations. The first equation states that the spiral intersects the
-circle with radius $R$ at the discrete angle $\theta_n$. The second
-equation defines the sample length $\Delta s$ along the arc to be
-equal to the step height $h$ of the spiral:
+want the sampling step to be equal to the step height $h=2\pi a$ of
+the spiral. We therefor need to find the zero of the function:
 \begin{align}
-  r(\theta_n)=R, \quad \Delta s=h.
+  g(a)&=\frac{s(\theta_n)}{n-1}-2\pi a\\
+  &=\frac{a}{2}\frac{p\theta_n+\log p\theta_n}{n-1}-2\pi a\\
+  &=\frac{a}{2}\frac{\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}+
+    \log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)}{n-1}-2\pi a.
 \end{align}
-Equivalently we may write:
-\begin{align} \label{eqn:2d2}
-  a \, \theta(n \Delta s)=R, \quad \Delta s=2\pi a.
-\end{align}
-We introduce \eqref{eqn:arclength} into the left equation as we did in
-the construction of \eqref{eqn:f}:
+Actually we know $a\not =0$ so we can transform the function to
+simplify its derivative:
 \begin{align}
-  a \, \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R+n\Delta s. 
-\end{align}
-Now we replace $\Delta s$ with the right equation from
-\eqref{eqn:2d2}, and divide by $a$:
-\begin{align}
-  \frac{a}{2} \(p\,\theta+\log(p\,\theta)\) = R/a +2\pi n. 
-\end{align}
-We reformulate the equation system as:
-\begin{align}
-  f_1(\theta,a)&=\frac{a}{2}
-  \(p\,\theta+\log(p\,\theta)\)
-  -2\pi n-R/a,\\
-  f_2(\theta,a)&=a\,\theta-R. 
-\end{align}
-Its Jacobian is:
-\begin{align}
-  J(\theta,a)=\begin{pmatrix}
-  f_{1,\theta} & f_{1,a} \\
-  f_{2,\theta} & f_{2,a}
-\end{pmatrix}.
-\end{align}
-With the derivatives
-\begin{align}
-  f_{1,\theta}&=\frac{a}{2}\frac{(1+2\theta^2)(1+\overbrace{p \theta}^q)}
-  {p^2 \theta},\\ 
-  f_{1,a}&=\frac{R}{a^2}+\frac{1}{2}(\underbrace{p\theta+\log(p\theta)}_r), \\
-  f_{2,\theta}&=a, \\
-  f_{2,a}&=\theta.
-\end{align}
-The inverse of the Jacobian is:
-\begin{align}
-J^{-1}(\theta,a)=\frac{\begin{pmatrix}
-    \theta & -f_{1,a} \\
-    -a & f_{1,\theta}\\
-\end{pmatrix}}
-{\theta f_{1,\theta}-a f_{1,a}}
-\end{align}
-The iteration step for the Newton method is:
-\begin{align}
-  \begin{pmatrix}\theta_{n+1}\\a_{n+1}\end{pmatrix}=
-  \begin{pmatrix}\theta_n\\a_n\end{pmatrix}
-  -J^{-1}(\theta_n,a_n)
-  \begin{pmatrix}f_1(\theta_n,a_n)\\f_2(\theta_n,a_n)\end{pmatrix}.
+  g_1(a)&=\underbrace{\sqrt{1+\frac{R^2}{a^2}}}_{p_1}\frac{R}{a}+
+  \log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)-4\pi (n-1),\\
+  g_1'(a)&=-\frac{R^3}{p_1}\frac{1}{a^4}-\frac{R^2}{p_1^2}\frac{1}{a^3}-R
+    p_1\frac{1}{a^2}-\frac{1}{a}.
 \end{align}
 \begin{figure}[h]
   \begin{center}
