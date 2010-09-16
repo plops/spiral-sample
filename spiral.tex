@@ -80,9 +80,10 @@ the spiral. We therefore need to find the zero of the function:
 \end{align}
 Actually we know $a\not =0$ so we can transform the function to
 simplify its derivative:
-\begin{align}
+\begin{align} \label{eqn:g1}
+\begin{split}
   g_1(a)&=\underbrace{\sqrt{1+\frac{R^2}{a^2}}}_{p_1}\frac{R}{a}+
-  \log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)-4\pi (n-1),\\
+  \log\(\sqrt{1+\frac{R^2}{a^2}}\frac{R}{a}\)\\ &-4\pi (n-1),\end{split}\\
   g_1'(a)&=-\frac{R^3}{p_1}\frac{1}{a^4}-\frac{R^2}{p_1^2}\frac{1}{a^3}-R
     p_1\frac{1}{a^2}-\frac{1}{a}.
 \end{align}
@@ -104,11 +105,27 @@ $\Delta s$ can be obtained and the circle drawn.
     right: 30, 100, 200, 300, 400, 1024).}
 \end{figure}
 
-\section{Outlook}
-It would be useful to modify the filling formula \eqref{eqn:g} such,
-that disks with radius $\Delta s/2$ on the sample points don't overlap
-the periphery of the big circle.
-
+\section{Improvement for sampling with disks}
+It is useful to modify the filling formula \eqref{eqn:g} such, that
+disks with radius $r_s=\alpha\Delta s/2$ on the sample points don't
+overlap the periphery of the big circle. Again we have $\theta_n=R/a$ but $R$ is smaller than the back focal plane radius $R_B$:
+\begin{align}
+  R=R_B-r_s.
+\end{align}
+Thus we can define the equivalent to \eqref{eqn:g1}:
+\begin{align}
+  \begin{split}
+  g_2(a)&=\overbrace{\sqrt{1+\frac{(R_B-\pi\alpha a)^2}{a^2}}}^{p_2}
+  \frac{R_B-\pi\alpha a}{a}\\
+  &+
+  \log\(\sqrt{1+\frac{(R_B-\pi\alpha a)^2}{a^2}}\frac{R_B-\pi\alpha a}{a}\)\\ 
+  &-4\pi (n-1),\end{split}\\
+  \begin{split}
+  g_2'(a)&=
+  -\frac{R^3}{p_2}\frac{1}{a^4}
+  -\(\frac{\pi\alpha R^2}{p_2}+\frac{R^3}{p_2^2}\)\frac{1}{a^3}\\
+  &-\(R p_2+\frac{\pi\alpha R}{p_2^2}\)\frac{1}{a^2}-\(\pi\alpha p_2+1\)\frac{1}{a}+\frac{\pi\alpha}{R}.\end{split}
+\end{align}
 \end{document}
 %% FindRoot[{a x == R, a/2 (Sqrt[1+x^2]x+Log[Sqrt[1+x^2]x]) == n * 2 pi a + R/a}, {{x, 1}, {a, 1}}]
 
